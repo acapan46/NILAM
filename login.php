@@ -1,5 +1,7 @@
 <?php
 session_start();
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST');
 header('Content-Type: application/json');
 error_reporting(E_ALL); 
 require('config.php');
