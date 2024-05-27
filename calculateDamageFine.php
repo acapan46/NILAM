@@ -9,8 +9,8 @@ header('Content-Type: application/json');
 $daysBeforeFine = $config[2];
 $renewCost = $config[4];
 $damageCost = $config[5];
-$bookPrice = $_POST['bookPrice'] ?? 0; // Default to 0 if not set
-$startDate = $_POST['startDate']; // Expected to be passed in 'Y-m-d' format
+$bookPrice = $_GET['bookPrice'] ?? 0; // Default to 0 if not set
+$startDate = $_GET['startDate']; // Expected to be passed in 'Y-m-d' format
 $endDate = date('Y-m-d'); // Today's date for comparison
 
 function getBusinessDatesCount($startDate, $endDate) {

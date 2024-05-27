@@ -3,11 +3,15 @@
 require_once('config.php');
 require_once('android_config.php');
 
+$daysBeforeFine = $config[2];
+$renewCost = $config[4];
+$damageCost = $config[5];
+$endDate = date('Y-m-d'); // Today's date for comparison
+
 if (isset($_GET['startDate'])) {
-    $startDate = new DateTime($_GET['startDate']);
-    $endDate = new DateTime(); // Today's date
+    $startDate = $_GET['startDate'];
     $numOfDates = getBusinessDatesCount($startDate, $endDate);
-    $denda = getKadarDenda($numOfDates, $config[2], $config[4]);
+    $denda = getKadarDenda($numOfDates, $daysBeforeFine, $renewCost);
 
     echo json_encode([
         'status' => 'success',
@@ -19,21 +23,27 @@ if (isset($_GET['startDate'])) {
 }
 
 function getBusinessDatesCount($startDate, $endDate) {
+    $start = new DateTime($startDate);
+    $end = new DateTime($endDate);
+    $end = $end->modify('+1 day'); // Include end date in the interval
+    $interval = new DateInterval('P1D');
+    $dateRange = new DatePeriod($start, $interval, $end);
+
     $count = 0;
-    $curDate = clone $startDate;
-    while ($curDate <= $endDate) {
-        if ($curDate->format('N') < 6) {
+    foreach ($dateRange as $date) {
+        if (!in_array($date->format('N'), [6, 7])) { // 6 and 7 are Saturday and Sunday
             $count++;
         }
-        $curDate->modify('+1 day');
     }
     return $count;
 }
 
 function getKadarDenda($numOfDates, $daysBeforeFine, $renewCost) {
     if ($numOfDates > $daysBeforeFine) {
-        return ($numOfDates - $daysBeforeFine) * $renewCost;
+        $daysOverdue = $numOfDates - $daysBeforeFine;
+        $fine = $daysOverdue * $renewCost;
+        return number_format($fine, 2, '.', ''); // Format to 2 decimal places
     }
-    return 0;
+    return number_format(0, 2, '.', ''); // Return "0.00" if no fine
 }
 ?>

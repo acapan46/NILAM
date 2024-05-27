@@ -5,10 +5,45 @@ require_once('config.php');
 require_once('android_config.php');
 
 
-$sql = "SELECT tblstudents.StudentId, tblstudents.FullName,tblbooks.BookName,tblbooks.ISBNNumber,tblbooks.BookPrice,tblissuedbookdetails.IssuesDate,tblissuedbookdetails.id as rid,tblissuedbookdetails.ReturnDate from  tblissuedbookdetails join tblstudents on tblstudents.StudentId=tblissuedbookdetails.StudentId join tblbooks on tblbooks.ISBNNumber=tblissuedbookdetails.BookId where tblissuedbookdetails.RetrunStatus IS NULL 
-UNION
-SELECT admin.id, admin.FullName,tblbooks.BookName,tblbooks.ISBNNumber,tblbooks.BookPrice,tblissuedbookdetails.IssuesDate,tblissuedbookdetails.id as rid,tblissuedbookdetails.ReturnDate from  tblissuedbookdetails join admin on admin.id=tblissuedbookdetails.StudentId join tblbooks on tblbooks.ISBNNumber=tblissuedbookdetails.BookId where tblissuedbookdetails.RetrunStatus IS NULL
-ORDER BY rid;";
+$sql = "SELECT 
+            tblstudents.StudentId, 
+            tblstudents.FullName, 
+            tblbooks.BookName, 
+            tblbooks.ISBNNumber, 
+            tblbooks.BookPrice, 
+            tblissuedbookdetails.IssuesDate, 
+            tblissuedbookdetails.id AS rid, 
+            tblissuedbookdetails.ReturnDate,
+            tblissuedbookdetails.renewCount 
+        FROM 
+            tblissuedbookdetails 
+        JOIN 
+            tblstudents ON tblstudents.StudentId = tblissuedbookdetails.StudentId 
+        JOIN 
+            tblbooks ON tblbooks.ISBNNumber = tblissuedbookdetails.BookId 
+        WHERE 
+            tblissuedbookdetails.RetrunStatus IS NULL
+        UNION
+        SELECT 
+            admin.id, 
+            admin.FullName, 
+            tblbooks.BookName, 
+            tblbooks.ISBNNumber, 
+            tblbooks.BookPrice, 
+            tblissuedbookdetails.IssuesDate, 
+            tblissuedbookdetails.id AS rid, 
+            tblissuedbookdetails.ReturnDate, 
+            tblissuedbookdetails.renewCount 
+        FROM 
+            tblissuedbookdetails 
+        JOIN 
+            admin ON admin.id = tblissuedbookdetails.StudentId 
+        JOIN 
+            tblbooks ON tblbooks.ISBNNumber = tblissuedbookdetails.BookId 
+        WHERE 
+            tblissuedbookdetails.RetrunStatus IS NULL
+        ORDER BY 
+            rid;";
 
 $query = $dbh->prepare($sql);
 $result = $query->execute();

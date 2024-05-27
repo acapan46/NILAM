@@ -22,10 +22,10 @@ try {
         $query->execute();
         $query->closeCursor();
 
-        $sql2 = "update tblbooks set isIssued = :status where ISBNNumber=:bookid;";
+        $sql2 = "update tblbooks set isIssued=:status where ISBNNumber=:bookid";
         $query2 = $dbh->prepare($sql2);
-        $query->bindParam(':bookid',$bookid,PDO::PARAM_STR);
-        $query->bindParam(':status',$status,PDO::PARAM_STR);
+        $query2->bindParam(':bookid',$bookid,PDO::PARAM_STR);
+        $query2->bindParam(':status',$status,PDO::PARAM_STR);
         $query2->execute();
         $query2->closeCursor();
 

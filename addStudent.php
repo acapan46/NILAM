@@ -22,7 +22,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     $fname = $_POST['fullanme'] ?? '';
     $mobileno = $_POST['mobileno'] ?? '';
     $email = $_POST['emailid'] ?? '';
-    $password=md5($config[16]);     
+    $password=md5($config[17]);     
     $standard = $_POST['standard'] ?? '';
     $year = date('Y'); // Current year
     $address = $_POST['address'] ?? '';

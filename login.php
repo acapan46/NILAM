@@ -35,21 +35,11 @@ if(isset($_POST['emailid']) && isset($_POST['password'])) {
     if ($query->rowCount() > 0) {
         foreach ($results as $result) {
             if ($result->Status == 1 || $result->adminStatus == 1) {
-                /*
-                    $sessionToken = bin2hex(random_bytes(32));
-    
-                    $updateTokenSql = "UPDATE " . ($userGroup == 1 ? "tblstudents" : "admin") . " SET session_token=:sessionToken WHERE " . ($userGroup == 1 ? "StudentId" : "id") . "=:id";
-                    $updateTokenQuery = $dbh->prepare($updateTokenSql);
-                    $updateTokenQuery->bindParam(':sessionToken', $sessionToken, PDO::PARAM_STR);
-                    $updateTokenQuery->bindParam(':id', $userGroup == 1 ? $result->StudentId : $result->id, PDO::PARAM_STR);
-                    $updateTokenQuery->execute();
-    
-                    // Add the session token to the response
-                    $response['sessionToken'] = $sessionToken;
-                */
-
                 
-                // User is active
+                $sessionToken = bin2hex(random_bytes(32));
+    
+                
+                $response['sessionToken'] = $sessionToken;
                 $response['status'] = 'success';
                 $response['message'] = 'Login successful.';
                 $response['user'] = array(
@@ -61,19 +51,19 @@ if(isset($_POST['emailid']) && isset($_POST['password'])) {
             } else {
                 // User is blocked or inactive
                 $response['status'] = 'error';
-                $response['message'] = 'Account is blocked. Please contact system administrator.';
+                $response['message'] = 'Akaun Tidak Aktif!/nSila berhubung dengan Pusat Sumber';
                 break;
             }
         }
     } else {
         // No user found
         $response['status'] = 'error';
-        $response['message'] = 'Invalid login credentials. Username is case-sensitive.';
+        $response['message'] = 'ID Atau Kata Laluan Salah';
     }
 } else {
     // Missing required POST data
     $response['status'] = 'error';
-    $response['message'] = 'Missing login credentials.';
+    $response['message'] = 'Tiada ruangan diisi';
 }
 
 echo json_encode($response);

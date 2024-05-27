@@ -20,18 +20,19 @@ try {
         $query->bindParam(':rid', $rid, PDO::PARAM_STR);
         $query->bindParam(':fine', $fine, PDO::PARAM_STR);
         $query->bindParam(':issuedDate', $issuedDate, PDO::PARAM_STR);
-        $query->bindParam(':returnDate', $returnDate, PDO::PARAM_STR);
+        $query->bindParam(':returnDate',$returnDate,PDO::PARAM_STR);
         $query->execute();
         $query->closeCursor();
 
-        $sql2 = "UPDATE tblissuedbookdetails SET renewCount = renewCount - 1 WHERE id=:rid;";
+        $sql2 = "UPDATE tblissuedbookdetails SET ReturnDate=:returnDate, renewCount = renewCount - 1 WHERE id=:rid;";
         $query2 = $dbh->prepare($sql2);
         $query2->bindParam(':rid', $rid, PDO::PARAM_STR);
+        $query2->bindParam(':returnDate',$returnDate,PDO::PARAM_STR);
         $query2->execute();
         $query2->closeCursor();
 
         $dbh->commit();
-        echo json_encode(['status' => 'success', 'message' => 'Book renewed successfully.']);
+        echo json_encode(['status' => 'success', 'message' => 'Book renewed successfully.',  'newIssuedDate' => $issuedDate]);
     }
     else if (isset($_POST['return'])) {
         $fine = $_POST['fine'];
@@ -76,7 +77,7 @@ try {
         $query5->closeCursor();
 
         $dbh->commit();
-        echo json_encode(['status' => 'success', 'message' => 'Damaged Book recordedsuccessfully.']);
+        echo json_encode(['status' => 'success', 'message' => 'Damaged Book recorded successfully.']);
     }
 
 } catch (PDOException $e) {
